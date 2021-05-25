@@ -1,8 +1,11 @@
 import {API_ENDPOINT} from "../constants";
 import axios from "axios";
+import {useContext} from "react";
+import {AuthContext} from "./useAuth";
 const {useState} = require("react");
 
 const useGames =()=>{
+    const auth = useContext(AuthContext);
     const [listGame , setListGame] = useState(null);
     const [error,setError] = useState(null);
     const [processing,setProcessing] = useState(false);

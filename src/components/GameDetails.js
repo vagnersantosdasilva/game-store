@@ -1,16 +1,26 @@
 import useGames from "../hooks/useGames";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
 import React from 'react'
 import {API_ENDPOINT, API_ENDPOINT_IMAGE} from "../constants";
+import {AuthContext} from "../hooks/useAuth";
+import {Redirect} from "react-router-dom";
+import useShoppingCart from "../hooks/useShoppingCart";
 
 const {useEffect} = require("react");
 
 const GameDetails = (props)=>{
+    const auth = useContext(AuthContext);
+    const service = useShoppingCart();
     const games = useGames();
     const [game,setGame] = useState(null);
+    const [back,setBack] = useState(false);
 
     useEffect(()=>{
+
+    },[])
+    useEffect(()=>{
+        if (back) setBack(false);
         const id = props.match.params.id;
         games.loadGameById(id);
         console.log(id);
@@ -28,6 +38,16 @@ const GameDetails = (props)=>{
         if(games.error) toast.error(`Ocorreu um erro :${games.error.message}` , {position:toast.POSITION.BOTTOM_LEFT});
     },[games.error]);
 
+    const addHandler = (event)=>{
+        service.save(game).then(()=>{
+            return <Redirect to="/cart"/>
+        }).catch((error)=>{
+            console.log(error);
+        })
+
+    }
+
+    if (back) return <Redirect to ="/"/>
     if (!games.processing && game!==null){
         return(
             <div className="container">
@@ -50,9 +70,8 @@ const GameDetails = (props)=>{
                         <hr/>
 
                         <div className="container">
-                            <button type="button" className="btn btn-info" onClick={()=>{alert("Comprar")}}>Comprar</button>&nbsp;&nbsp;
-                            <button type="button" className="btn btn-success"  onClick={()=>{alert("adicionar")}} >Adicionar ao carrinho</button>&nbsp;&nbsp;
-                            <button type="button" className="btn btn-primary" onClick={()=>{alert("voltar")}}>Voltar</button>&nbsp;&nbsp;
+                            <button type="button" className="btn btn-success"  onClick={addHandler} >Adicionar ao carrinho</button>&nbsp;&nbsp;
+                            <button type="button" className="btn btn-primary" onClick={()=>{setBack(true)}}>Voltar</button>&nbsp;&nbsp;
 
                         </div>
                     </div>

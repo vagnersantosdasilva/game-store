@@ -1,18 +1,20 @@
 import useGames from "../hooks/useGames";
 import {GameListItems} from "./GameListItems";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import React from 'react';
 import {ToastContainer,toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
+import {AuthContext} from "../hooks/useAuth";
 
 const Games = ()=>{
 
     const games = useGames();
     const [list,setList] = useState(null);
+    const auth = useContext(AuthContext);
 
     useEffect(()=>{
         games.loadListGames();
-    },[]);
+    },[auth.credentials]);
 
     useEffect(()=>{
         if(games.error) toast.error(`Ocorreu um erro :${games.error.message}` , {position:toast.POSITION.BOTTOM_LEFT});
