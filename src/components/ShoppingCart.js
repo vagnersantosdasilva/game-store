@@ -10,14 +10,15 @@ const ShoppingCart = ()=>{
     const [redirect,setRedirect] = useState(false);
     const [cart,setCart] = useState(null);
     const cartService = useShoppingCart();
+    const [redirectCheckout ,setRedirectCheckout] = useState(false);
+
 
     useEffect(()=>{
         if (redirect) setRedirect(false);
+        if (redirectCheckout) setRedirectCheckout(false);
     },[]);
 
     useEffect(()=>{
-
-
         cartService.loadCart(auth.credentials.id);
         if (cartService.processing ===false) console.log(cartService.cart);
     },[auth.credentials]);
@@ -36,10 +37,10 @@ const ShoppingCart = ()=>{
     }
 
     const onCheckOutHandler  = (event)=>{
-
+        setRedirectCheckout(true);
     }
 
-
+    if( redirectCheckout) return <Redirect to  = "/checkout"></Redirect>
     if (cartService.processing) {
         return (
             <div className="jumbotron">
@@ -76,7 +77,7 @@ const ShoppingCart = ()=>{
                     </div>
                     <div class="row">
                         {cartService.cart.total!==0?
-                            <div><center><button className="btn btn-info" onClick={onClickHandler}>Continuar comprando</button>
+                            <div><center><button className="btn btn-info" onClick={onClickHandler}>Continuar comprando</button>&nbsp;&nbsp;
                                 <button className="btn btn-success" onClick={onCheckOutHandler}>Finalizar Pedido</button></center>
                             </div>:""
 

@@ -15,15 +15,17 @@ const GameDetails = (props)=>{
     const games = useGames();
     const [game,setGame] = useState(null);
     const [back,setBack] = useState(false);
+    const [message,setMessage] = useState(false);
 
     useEffect(()=>{
+        if (message) toast.success("Adicionado  ao carrinho" , {position:toast.POSITION.BOTTOM_LEFT});
+        setMessage(false);
+    },[message])
 
-    },[])
     useEffect(()=>{
         if (back) setBack(false);
         const id = props.match.params.id;
         games.loadGameById(id);
-        console.log(id);
 
     },[]);
 
@@ -39,12 +41,8 @@ const GameDetails = (props)=>{
     },[games.error]);
 
     const addHandler = (event)=>{
-        service.save(game).then(()=>{
-            return <Redirect to="/cart"/>
-        }).catch((error)=>{
-            console.log(error);
-        })
-
+        service.save(game);
+        setMessage(true);
     }
 
     if (back) return <Redirect to ="/"/>
@@ -71,7 +69,7 @@ const GameDetails = (props)=>{
 
                         <div className="container">
                             <button type="button" className="btn btn-success"  onClick={addHandler} >Adicionar ao carrinho</button>&nbsp;&nbsp;
-                            <button type="button" className="btn btn-primary" onClick={()=>{setBack(true)}}>Voltar</button>&nbsp;&nbsp;
+                            <button type="button" className="btn btn-primary" onClick={()=>{setBack(true)}}>Continuar comprando</button>&nbsp;&nbsp;
 
                         </div>
                     </div>
@@ -79,7 +77,7 @@ const GameDetails = (props)=>{
 
 
                 </div>
-                <ToastContainer autoClose={5000}/>
+                <ToastContainer autoClose={3000}/>
             </div>
 
         );

@@ -5,6 +5,7 @@ import GameDetails from "./components/GameDetails";
 import NavBar from "./components/NavBar";
 import ShoppingCart from "./components/ShoppingCart";
 import {AuthContext, useAuth} from "./hooks/useAuth";
+import Checkout from "./components/Checkout";
 
 const App = ()=>{
     const auth = useAuth();
@@ -15,6 +16,7 @@ const App = ()=>{
                   <NavBar />
                   <div>
                       <Switch>
+                          <Route exact path ="/checkout" component={Checkout}></Route>
                           <Route exact path ="/cart" component={ShoppingCart}></Route>
                           <Route exact path ="/gamedetails/:id" component={GameDetails}></Route>
                           <Route exact path ="/" component={Games}></Route>
